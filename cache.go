@@ -85,9 +85,5 @@ func (c *Cache) PutTill(key, value string, deadline time.Time) {
 
 
 func calcTime(timeNow, deadline time.Time) bool {
-
-	if timeNow.Before(deadline) {
-		return true
-	}
-	return false
+	return timeNow.Before(deadline)
 }
