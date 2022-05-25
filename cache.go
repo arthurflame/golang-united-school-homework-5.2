@@ -22,11 +22,13 @@ func NewCache() Cache {
 func main() {
 	cache := NewCache()
 	cache.Put("1", "222")
-	cache.Get("1")
 
-	//cache.PutTill("33", "111", time.Now().Add(time.Second*10))
-	//cache.PutTill("15", "111", time.Now())
 
+	cache.PutTill("33", "should exist", time.Now().Add(time.Second*10))
+
+	cache.PutTill("15", "shouldn't exist", time.Now())
+	i, ok := cache.Get("15")
+	fmt.Println(i, ok)
 	//fmt.Println(cache.Keys())
 
 	fmt.Println(cache)
@@ -48,10 +50,11 @@ func (c *Cache) Put(key, value string) {
 func (c *Cache) Get(key string) (string, bool) {
 	var value string
 	var exists bool
-	if i, ok := c.data[key]; ok && !time.Now().Before(i.expirationTime) {
+	if i, ok := c.data[key]; ok && time.Now().Before(i.expirationTime) {
 		exists = ok
 		value = i.value
 	} else {
+		delete(c.data, key)
 		return fmt.Sprintf("the requested key: [%v] has expired or doesn't exist.\n", key), false
 	}
 	return value, exists
@@ -80,4 +83,6 @@ func (c *Cache) PutTill(key, value string, deadline time.Time) {
 		c.data[key] = data
 	}
 	c.data[key] = data
+
+
 }
