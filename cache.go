@@ -22,13 +22,15 @@ func NewCache() Cache {
 
 func main() {
 	cache := NewCache()
+	cache.Put("1", "222")
 	cache.Put("2", "222")
-	cache.PutTill("1", "111", time.Now().Add(time.Second*10))
-	//cache.PutTill("3", "111", time.Now().Add(time.Second*20))
+	cache.Put("1", "333")
+	//cache.PutTill("1", "111", time.Now().Add(time.Second*10))
+	cache.PutTill("2", "111", time.Now().Add(time.Second*20))
 
 	fmt.Println(cache.Keys())
 
-	//fmt.Println(cache)
+	fmt.Println(cache)
 }
 
 func (c *Cache) Put(key, value string) {
@@ -40,9 +42,9 @@ func (c *Cache) Put(key, value string) {
 
 	if _, ok := c.data[key]; !ok {
 		c.data[key] = data
-	} else {
-		c.data[key] = data
 	}
+	c.data[key] = data
+
 }
 
 func (c *Cache) Get(key string) (string, bool) {
@@ -88,9 +90,9 @@ func (c *Cache) PutTill(key, value string, deadline time.Time) {
 
 	if _, ok := c.data[key]; !ok {
 		c.data[key] = data
-	} else {
-		c.data[key] = data
 	}
+	c.data[key] = data
+
 }
 
 func calcTime(timeNow, deadline time.Time) bool {
