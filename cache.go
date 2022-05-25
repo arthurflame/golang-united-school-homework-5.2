@@ -69,9 +69,9 @@ func (c *Cache) PutTill(key, value string, deadline time.Time) {
 	}
 	c.data[key] = data
 
-	if time.Now() == time.Now().Add(time.Until(data.expirationTime)) {
-		delete(c.data, key)
-	}
+	//if time.Now() == time.Now().Add(time.Until(data.expirationTime)) {
+	//	delete(c.data, key)
+	//}
 
 }
 
