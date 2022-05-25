@@ -24,14 +24,16 @@ func NewCache() Cache {
 func main() {
 	cache := NewCache()
 
-	//cache.Put("1", "1111111111111")
+	cache.Put("1", "1111111111111")
 	//cache.Put("2", "2222222222222")
-	cache.PutTill("2", "2222222222222", time.Now())
+	cache.PutTill("2", "2222222222222", time.Now().Add(time.Second * 20))
 	k, ok := cache.Get("2")
 	fmt.Println(k, ok)
 
-	
+
 	fmt.Println("cache:", cache)
+	keys := cache.Keys()
+	fmt.Println("keys", keys)
 }
 
 func (c *Cache) Put(key, value string) {
@@ -46,7 +48,6 @@ func (c *Cache) Put(key, value string) {
 	} else {
 		c.data[key] = data
 	}
-
 }
 
 func (c *Cache) Get(key string) (string, bool) {
@@ -68,11 +69,24 @@ func (c *Cache) Get(key string) (string, bool) {
 	return value, exists
 }
 
-//
-//
-//func (receiver) Keys() []string {
-//}
-//
+
+func (c *Cache) Keys() []string {
+	var keys []string
+
+	for i := range c.data {
+		if k, ok := c.data[i]; ok && !k.canExpire {
+			keys = append(keys, i)
+		} else if ok && k.canExpire {
+			now := time.Date(time.Now().Year(), time.Now().Month(), time.Now().Day(), time.Now().Hour(), time.Now().Minute(), time.Now().Second(), time.Now().Nanosecond(), time.UTC)
+			expiration := time.Date(k.expirationTime.Year(), k.expirationTime.Month(), k.expirationTime.Day(), k.expirationTime.Hour(), k.expirationTime.Minute(), k.expirationTime.Second(), k.expirationTime.Nanosecond(), time.UTC)
+			if now.Before(expiration) {
+				keys = append(keys, i)
+			}
+		}
+	}
+	return keys
+}
+
 
 func (c *Cache) PutTill(key, value string, deadline time.Time) {
 	data := Data{
@@ -86,7 +100,4 @@ func (c *Cache) PutTill(key, value string, deadline time.Time) {
 	} else {
 		c.data[key] = data
 	}
-
-	//fmt.Println(time.Now() == data.expirationTime)
-	//fmt.Println("time.Now():",time.Now(), "expirationTime:",data.expirationTime)
 }
