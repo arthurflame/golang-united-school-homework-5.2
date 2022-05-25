@@ -11,23 +11,28 @@ type Data struct {
 
 
 type Cache struct {
-	data []map[string]Data
+	data map[string]Data
 
 
 }
 
 func NewCache() Cache {
-	return Cache{}
+	return Cache{
+		make(map[string]Data),
+	}
 }
 
 func main() {
 	cache := NewCache()
 
+
 	cache.Put("1", "1111111111111")
-	//cache.Put("2", "2222222222222")
-	//cache.Put("2", "3333333333333")
+	cache.Put("2", "2222222222222")
+	cache.Put("2", "3333333333333")
+	//cache.Put("3", "3333333333333")
 	fmt.Println("cache:", cache)
 }
+
 
 func (c *Cache) Put(key, value string) {
 
@@ -37,22 +42,10 @@ func (c *Cache) Put(key, value string) {
 		expirationTime: 0,
 	}
 
-
-	//c.data = append(c.data, map[string]Data{key:data})
-
-	//fmt.Println(c.folder[0], data)
-
-
-	fmt.Println("c.data", c.data)
-
-	for i := 0; i < len(c.data); i++ {
-		if v, ok := c.data[i][key]; !ok {
-			c.data = append(c.data, map[string]Data{key:data})
-			//fmt.Println(k)
-			//c.data[0]["1"] = Data{value: "wewewew"}
-		} else {
-			c.data[i][key] = Data{value: value}
-		}
+	if _, ok := c.data[key]; !ok {
+		c.data[key] = data
+	} else {
+		c.data[key] = data
 	}
 
 }
