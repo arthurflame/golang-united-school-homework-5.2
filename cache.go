@@ -42,7 +42,7 @@ func (c *Cache) Get(key string) (string, bool) {
 		exists = ok
 		value = i.value
 	} else if ok && i.canExpire {
-		if calcTime(time.Now(), k.expirationTime) {
+		if calcTime(time.Now(), i.expirationTime) {
 			exists = ok
 			value = i.value
 		}
