@@ -2,11 +2,12 @@ package main
 
 import (
 	"fmt"
+	"time"
 )
 type Data struct {
 	value string
 	canExpire bool
-	expirationTime int
+	expirationTime time.Time
 }
 
 
@@ -28,18 +29,19 @@ func main() {
 
 	cache.Put("1", "1111111111111")
 	cache.Put("2", "2222222222222")
-	cache.Put("2", "3333333333333")
+	//cache.Put("2", "3333333333333")
 	//cache.Put("3", "3333333333333")
-	fmt.Println("cache:", cache)
+	k, ok := cache.Get("2")
+	fmt.Println(k, ok)
+	//fmt.Println("cache:", cache)
 }
 
 
 func (c *Cache) Put(key, value string) {
-
 	data := Data{
 		value:          value,
 		canExpire:      false,
-		expirationTime: 0,
+		expirationTime: time.Time{},
 	}
 
 	if _, ok := c.data[key]; !ok {
@@ -47,14 +49,22 @@ func (c *Cache) Put(key, value string) {
 	} else {
 		c.data[key] = data
 	}
+}
+
+
+func (c *Cache) Get(key string) (string, bool) {
+	var value string
+	var exists bool
+
+	if i, ok := c.data[key]; ok  && !i.canExpire {
+		exists = ok
+		value = i.value
+	}
+	return value, exists
 
 }
 
 
-
-//func (c *Cache) Get(key string) (string, bool) {
-//
-//}
 //
 //
 //func (receiver) Keys() []string {
