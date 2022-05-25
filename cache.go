@@ -36,7 +36,7 @@ func (c *Cache) Get(key string) (string, bool) {
 	var value string
 	var exists bool
 	
-	if i, ok := c.data[key]; ok && !time.Now().Before(i.expirationTime) {
+	if i, ok := c.data[key]; ok && time.Now().Before(i.expirationTime) {
 		exists = ok
 		value = i.value
 	} else {
@@ -50,7 +50,7 @@ func (c *Cache) Keys() []string {
 	var keys []string
 
 	for i := range c.data {
-		if k, ok := c.data[i]; ok && !time.Now().Before(k.expirationTime) {
+		if k, ok := c.data[i]; ok && time.Now().Before(k.expirationTime) {
 			keys = append(keys, i)
 		}
 	}
@@ -68,6 +68,10 @@ func (c *Cache) PutTill(key, value string, deadline time.Time) {
 		c.data[key] = data
 	}
 	c.data[key] = data
+
+	if time.Now() == time.Now().Add(time.Until(data.expirationTime)) {
+		delete(c.data, key)
+	}
 
 }
 
