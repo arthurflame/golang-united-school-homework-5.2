@@ -30,9 +30,9 @@ func (c *Cache) Put(key, value string) {
 
 	if _, ok := c.data[key]; !ok {
 		c.data[key] = data
-	} else {
-		c.data[key] = data
 	}
+	c.data[key] = data
+	
 }
 
 func (c *Cache) Get(key string) (string, bool) {
@@ -78,9 +78,9 @@ func (c *Cache) PutTill(key, value string, deadline time.Time) {
 
 	if _, ok := c.data[key]; !ok {
 		c.data[key] = data
-	} else {
-		c.data[key] = data
 	}
+	c.data[key] = data
+
 }
 
 
