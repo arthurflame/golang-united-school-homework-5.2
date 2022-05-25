@@ -85,10 +85,8 @@ func (c *Cache) PutTill(key, value string, deadline time.Time) {
 
 
 func calcTime(timeNow, deadline time.Time) bool {
-	now := time.Date(timeNow.Year(), timeNow.Month(), timeNow.Day(), timeNow.Hour(), timeNow.Minute(), timeNow.Second(), timeNow.Nanosecond(), time.UTC)
-	expiration := time.Date(deadline.Year(), deadline.Month(), deadline.Day(), deadline.Hour(), deadline.Minute(), deadline.Second(), deadline.Nanosecond(), time.UTC)
 
-	if now.Before(expiration) {
+	if timeNow.Before(deadline) {
 		return true
 	}
 	return false
