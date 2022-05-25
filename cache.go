@@ -42,9 +42,7 @@ func (c *Cache) Get(key string) (string, bool) {
 		exists = ok
 		value = i.value
 	} else if ok && i.canExpire {
-		now := time.Date(time.Now().Year(), time.Now().Month(), time.Now().Day(), time.Now().Hour(), time.Now().Minute(), time.Now().Second(), time.Now().Nanosecond(), time.UTC)
-		expiration := time.Date(i.expirationTime.Year(), i.expirationTime.Month(), i.expirationTime.Day(), i.expirationTime.Hour(), i.expirationTime.Minute(), i.expirationTime.Second(), i.expirationTime.Nanosecond(), time.UTC)
-		if now.Before(expiration) {
+		if calcTime(time.Now(), k.expirationTime) {
 			exists = ok
 			value = i.value
 		}
@@ -62,9 +60,7 @@ func (c *Cache) Keys() []string {
 		if k, ok := c.data[i]; ok && !k.canExpire {
 			keys = append(keys, i)
 		} else if ok && k.canExpire {
-			now := time.Date(time.Now().Year(), time.Now().Month(), time.Now().Day(), time.Now().Hour(), time.Now().Minute(), time.Now().Second(), time.Now().Nanosecond(), time.UTC)
-			expiration := time.Date(k.expirationTime.Year(), k.expirationTime.Month(), k.expirationTime.Day(), k.expirationTime.Hour(), k.expirationTime.Minute(), k.expirationTime.Second(), k.expirationTime.Nanosecond(), time.UTC)
-			if now.Before(expiration) {
+			if calcTime(time.Now(), k.expirationTime) {
 				keys = append(keys, i)
 			}
 		}
@@ -85,4 +81,15 @@ func (c *Cache) PutTill(key, value string, deadline time.Time) {
 	} else {
 		c.data[key] = data
 	}
+}
+
+
+func calcTime(timeNow, deadline time.Time) bool {
+	now := time.Date(timeNow.Year(), timeNow.Month(), timeNow.Day(), timeNow.Hour(), timeNow.Minute(), timeNow.Second(), timeNow.Nanosecond(), time.UTC)
+	expiration := time.Date(deadline.Year(), deadline.Month(), deadline.Day(), deadline.Hour(), deadline.Minute(), deadline.Second(), deadline.Nanosecond(), time.UTC)
+
+	if now.Before(expiration) {
+		return true
+	}
+	return false
 }
