@@ -1,7 +1,6 @@
 package cache
 
 import (
-	"fmt"
 	"time"
 )
 
@@ -47,7 +46,8 @@ func (c *Cache) Get(key string) (string, bool) {
 			value = i.value
 		}
 	} else {
-		return fmt.Sprintf("the requested key: [%v] has expired or doesn't exist.\n", key), false
+		//return fmt.Sprintf("the requested key: [%v] has expired or doesn't exist.\n", key), false
+		return "", false
 	}
 	return value, exists
 }
