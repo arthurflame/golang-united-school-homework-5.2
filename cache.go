@@ -25,8 +25,8 @@ func main() {
 	cache.Put("1", "222")
 	cache.Put("2", "222")
 	cache.Put("1", "333")
-	//cache.PutTill("1", "111", time.Now().Add(time.Second*10))
-	cache.PutTill("2", "111", time.Now().Add(time.Second*20))
+	cache.PutTill("33", "111", time.Now().Add(time.Second*10))
+	cache.PutTill("15", "111", time.Now())
 
 	fmt.Println(cache.Keys())
 
@@ -93,13 +93,14 @@ func (c *Cache) PutTill(key, value string, deadline time.Time) {
 	}
 	c.data[key] = data
 
+	if !calcTime(time.Now(), data.expirationTime) {
+		//c.data[key]
+	}
+
 }
 
 func calcTime(timeNow, deadline time.Time) bool {
-	now := time.Date(timeNow.Year(), timeNow.Month(), timeNow.Day(), timeNow.Hour(), timeNow.Minute(), timeNow.Second(), timeNow.Nanosecond(), time.UTC)
-	expiration := time.Date(deadline.Year(), deadline.Month(), deadline.Day(), deadline.Hour(), deadline.Minute(), deadline.Second(), deadline.Nanosecond(), time.UTC)
-
-	if now.Before(expiration) {
+	if timeNow.Before(deadline) {
 		return true
 	}
 	return false
