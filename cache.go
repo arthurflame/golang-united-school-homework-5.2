@@ -31,7 +31,7 @@ func main() {
 	cache.Put("2", "2222222222222")
 	//cache.Put("2", "3333333333333")
 	//cache.Put("3", "3333333333333")
-	k, ok := cache.Get("2")
+	k, ok := cache.Get("22")
 	fmt.Println(k, ok)
 	//fmt.Println("cache:", cache)
 }
@@ -59,9 +59,15 @@ func (c *Cache) Get(key string) (string, bool) {
 	if i, ok := c.data[key]; ok  && !i.canExpire {
 		exists = ok
 		value = i.value
+	} else if ok && i.canExpire {
+		if time.Now() != i.expirationTime {
+			exists = ok
+			value = i.value
+		}
+	} else {
+		return fmt.Sprintf("the requested key: [%v] has expired or doesn't exist.\n", key), false
 	}
 	return value, exists
-
 }
 
 
