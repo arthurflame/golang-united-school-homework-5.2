@@ -36,11 +36,10 @@ func (c *Cache) Get(key string) (string, bool) {
 	var value string
 	var exists bool
 	
-	if i, ok := c.data[key]; ok && time.Now().Before(i.expirationTime) {
+	if i, ok := c.data[key]; ok && !time.Now().Before(i.expirationTime) {
 		exists = ok
 		value = i.value
 	} else {
-		delete(c.data, key)
 		return "", false
 	}
 	return value, exists
