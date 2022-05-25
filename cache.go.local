@@ -1,4 +1,4 @@
-package solution
+package main
 
 import (
 	"fmt"
@@ -19,6 +19,21 @@ func NewCache() Cache {
 	return Cache{
 		make(map[string]Data),
 	}
+}
+
+func main() {
+	cache := NewCache()
+
+	cache.Put("1", "1111111111111")
+	//cache.Put("2", "2222222222222")
+	cache.PutTill("2", "2222222222222", time.Now().Add(time.Second * 20))
+	k, ok := cache.Get("2")
+	fmt.Println(k, ok)
+
+
+	fmt.Println("cache:", cache)
+	keys := cache.Keys()
+	fmt.Println("keys", keys)
 }
 
 func (c *Cache) Put(key, value string) {
