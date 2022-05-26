@@ -53,7 +53,7 @@ func (c *Cache) Keys() []string {
 	var keys []string
 	var z time.Time
 
-	for i := range c.data {
+	for i, v := range c.data {
 		if _, ok := c.data[i]; ok && time.Now().Before(v.expirationTime) || v.expirationTime == z {
 			keys = append(keys, i)
 		}
