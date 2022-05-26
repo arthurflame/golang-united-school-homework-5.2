@@ -36,8 +36,9 @@ func (c *Cache) Get(key string) (string, bool) {
 	// TODO: figure out why this doesn't work
 	var value string
 	var exists bool
+	var z time.Time
 	
-	if i, ok := c.data[key]; ok {
+	if i, ok := c.data[key]; ok && time.Now().Before(i.expirationTime) || i.expirationTime == z {
 		exists = ok
 		value = i.value
 	} else {
@@ -50,9 +51,10 @@ func (c *Cache) Get(key string) (string, bool) {
 func (c *Cache) Keys() []string {
 	// TODO: figure out why this doesn't fcking !!!!work
 	var keys []string
+	var z time.Time
 
 	for i := range c.data {
-		if _, ok := c.data[i]; ok {
+		if _, ok := c.data[i]; ok && time.Now().Before(v.expirationTime) || v.expirationTime == z {
 			keys = append(keys, i)
 		}
 	}
