@@ -54,6 +54,8 @@ func (c *Cache) Keys() []string {
 	for i, v := range c.data {
 		if _, ok := c.data[i]; ok && time.Now().Before(v.expirationTime) || v.expirationTime == z {
 			keys = append(keys, i)
+		} else {
+			delete(c.data, i)
 		}
 	}
 	return keys
