@@ -33,7 +33,6 @@ func (c *Cache) Put(key, value string) {
 }
 
 func (c *Cache) Get(key string) (string, bool) {
-	// TODO: figure out why this doesn't work
 	var value string
 	var exists bool
 	var z time.Time
@@ -49,7 +48,6 @@ func (c *Cache) Get(key string) (string, bool) {
 
 
 func (c *Cache) Keys() []string {
-	// TODO: figure out why this doesn't fcking !!!!work
 	var keys []string
 	var z time.Time
 
