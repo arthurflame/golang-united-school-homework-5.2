@@ -27,8 +27,9 @@ func main() {
 	cache.PutTill("2", "should exist", time.Now().Add(time.Second*30))
 	cache.PutTill("3", "shouldn't exist", time.Now())
 
-	//i, ok := cache.Get("3")
+	i, ok := cache.Get("z")
 
+	fmt.Println(i, ok)
 
 	fmt.Println(cache)
 	fmt.Println(cache.Keys())
@@ -43,18 +44,17 @@ func (c *Cache) Put(key, value string) {
 		expirationTime: time.Time{},
 	}
 
-	if _, ok := c.data[key]; !ok {
-		c.data[key] = data
-	}
+	//if _, ok := c.data[key]; !ok {
+	//	c.data[key] = data
+	//}
 	c.data[key] = data
 }
 
 func (c *Cache) Get(key string) (string, bool) {
 	var value string
 	var exists bool
-	var z time.Time
 
-	if i, ok := c.data[key]; ok && time.Now().Before(i.expirationTime) || i.expirationTime == z {
+	if i, ok := c.data[key]; ok && time.Now().Before(i.expirationTime) || i.expirationTime.IsZero() {
 		exists = ok
 		value = i.value
 	} else {
@@ -67,10 +67,9 @@ func (c *Cache) Get(key string) (string, bool) {
 
 func (c *Cache) Keys() []string {
 	var keys []string
-	var z time.Time
 
 	for i, v  := range c.data {
-		if _, ok := c.data[i]; ok && time.Now().Before(v.expirationTime) || v.expirationTime == z {
+		if _, ok := c.data[i]; ok && time.Now().Before(v.expirationTime) || v.expirationTime.IsZero() {
 			keys = append(keys, i)
 		} else {
 			delete(c.data, i)
@@ -85,9 +84,9 @@ func (c *Cache) PutTill(key, value string, deadline time.Time) {
 		value:          value,
 		expirationTime: deadline,
 	}
-	if _, ok := c.data[key]; !ok {
-		c.data[key] = data
-	}
+	//if _, ok := c.data[key]; !ok {
+	//	c.data[key] = data
+	//}
 	c.data[key] = data
 
 }
